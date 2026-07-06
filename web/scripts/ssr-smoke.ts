@@ -7,6 +7,8 @@ import { createPublicClient, http } from "viem";
 import { pokerTableAbi } from "../lib/abi";
 import { decodeArenaLog } from "../lib/events";
 import { buildArenaState } from "../lib/poker";
+import { buildReplay } from "../lib/replay";
+import { buildLiveStage, buildReplayStage } from "../lib/stage";
 import { Header } from "../components/Header";
 import { PokerTable } from "../components/poker/PokerTable";
 import { FairnessStrip } from "../components/FairnessStrip";
@@ -31,12 +33,19 @@ async function main() {
   const events = logs.map(decodeArenaLog).filter((e): e is ArenaEvent => e !== null);
   const state = buildArenaState(raw, events);
 
+  const lastHand = state.hands[state.hands.length - 1];
+  const steps = buildReplay(lastHand);
+  const midStep = steps[Math.floor(steps.length / 2)];
+
   const html = renderToStaticMarkup(
     h(
       "div",
       null,
       h(Header, { latestBlock: latest, connected: true }),
-      h(PokerTable, { table: state.table! }),
+      h(PokerTable, { stage: buildLiveStage(state.table!, state.hands) }),
+      h(PokerTable, {
+        stage: buildReplayStage(lastHand, midStep, Math.floor(steps.length / 2), steps.length, state.players),
+      }),
       h(FairnessStrip, { table: state.table! }),
       h(ActionFeed, { hands: state.hands }),
       h(HandHistory, { hands: state.hands }),
@@ -44,8 +53,8 @@ async function main() {
     ),
   );
 
-  console.log(`SSR render OK — ${html.length} bytes\n`);
-  const checks = ["VEGA", "BOB", "0.392", "showdown", "LIVE ACTION FEED", "HAND #1", "4♣", "deck commitment"];
+  console.log(`SSR render OK — ${html.length} bytes (replay steps for hand #${lastHand.id}: ${steps.length})\n`);
+  const checks = ["VEGA", "BOB", "showdown", "LIVE ACTION FEED", "replay ·", "deck commitment"];
   for (const s of checks) console.log(html.includes(s) ? `  ✓ contains "${s}"` : `  ✗ MISSING "${s}"`);
 }
 

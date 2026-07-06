@@ -1,6 +1,6 @@
 import { isHidden, toCard } from "@/lib/cards";
 
-export type CardSize = "board" | "hole" | "chip" | "mini";
+export type CardSize = "board" | "big" | "hole" | "chip" | "mini";
 
 interface Dim {
   box: string;
@@ -10,7 +10,8 @@ interface Dim {
 }
 
 const DIMS: Record<CardSize, Dim> = {
-  board: { box: "w-[clamp(38px,9vw,54px)] h-[clamp(54px,13vw,76px)]", radius: "rounded-[9px]", rank: "text-[15px]", suit: "text-[26px]" },
+  board: { box: "w-[clamp(42px,6.8vw,60px)] h-[clamp(58px,9.6vw,84px)]", radius: "rounded-[10px]", rank: "text-[clamp(13px,1.9vw,17px)]", suit: "text-[clamp(22px,3.3vw,30px)]" },
+  big: { box: "w-[clamp(42px,6.4vw,58px)] h-[clamp(58px,9vw,81px)]", radius: "rounded-[9px]", rank: "text-[clamp(13px,1.8vw,17px)]", suit: "text-[clamp(22px,3.2vw,30px)]" },
   hole: { box: "w-[38px] h-[54px]", radius: "rounded-md", rank: "text-[12px]", suit: "text-[19px]" },
   chip: { box: "w-[25px] h-[33px]", radius: "rounded-[5px]", rank: "text-[10px]", suit: "text-[13px]" },
   mini: { box: "w-[20px] h-[27px]", radius: "rounded-[4px]", rank: "text-[8px]", suit: "text-[11px]" },

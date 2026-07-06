@@ -4,6 +4,7 @@ import { shortAddr } from "@/lib/format";
 import { Badge } from "./ui/Badge";
 import { CopyButton } from "./ui/CopyButton";
 import { LiveDot } from "./ui/LiveDot";
+import { SoundToggle } from "./ui/SoundToggle";
 
 interface Props {
   latestBlock: bigint | null;
@@ -25,6 +26,7 @@ export function Header({ latestBlock, connected }: Props) {
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
+        <SoundToggle />
         <Badge tone="neutral">
           <span className="text-faint">chain</span>
           {botChain.name} · {env.chainId}

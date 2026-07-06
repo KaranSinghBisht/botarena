@@ -16,7 +16,13 @@ function ReasonTag({ reason }: { reason: number | null }) {
   );
 }
 
-function HistoryRow({ hand }: { hand: HandView }) {
+interface RowProps {
+  hand: HandView;
+  onSelect?: (hand: HandView) => void;
+  selected?: boolean;
+}
+
+function HistoryRow({ hand, onSelect, selected }: RowProps) {
   if (hand.canceled) {
     return (
       <div className="flex items-center gap-3 rounded-lg border border-line/70 bg-white/[0.015] px-3 py-2 text-sm text-muted">
@@ -29,7 +35,16 @@ function HistoryRow({ hand }: { hand: HandView }) {
   const p = hand.winnerSeat !== null ? persona(hand.winnerSeat) : null;
 
   return (
-    <div className="flex items-center gap-3 rounded-lg border border-line/70 bg-white/[0.015] px-3 py-2 text-sm">
+    <button
+      type="button"
+      onClick={() => onSelect?.(hand)}
+      title="Watch replay"
+      className={`flex w-full items-center gap-3 rounded-lg border px-3 py-2 text-left text-sm transition-colors ${
+        selected
+          ? "border-log/50 bg-log/[0.06]"
+          : "border-line/70 bg-white/[0.015] hover:border-log/40 hover:bg-white/[0.03]"
+      }`}
+    >
       <span className="w-9 shrink-0 text-[11px] text-faint">#{hand.id}</span>
       <span className={`w-12 shrink-0 font-bold ${p?.accent === "vega" ? "text-vega" : "text-bob"}`}>
         {p?.name ?? "—"}
@@ -54,23 +69,32 @@ function HistoryRow({ hand }: { hand: HandView }) {
         </div>
       )}
 
-      {hand.audited && (
-        <span className="ml-auto text-log" title="deck audited on-chain">
-          ✓
-        </span>
-      )}
-    </div>
+      <span className="ml-auto flex items-center gap-2">
+        {hand.audited && (
+          <span className="text-log" title="deck audited on-chain">
+            ✓
+          </span>
+        )}
+        <span className="eyebrow !text-[9px] text-faint">▸</span>
+      </span>
+    </button>
   );
 }
 
-export function HandHistory({ hands }: { hands: HandView[] }) {
+interface Props {
+  hands: HandView[];
+  onSelect?: (hand: HandView) => void;
+  selectedId?: number | null;
+}
+
+export function HandHistory({ hands, onSelect, selectedId }: Props) {
   const finished = hands.filter((h) => h.settled).reverse();
 
   return (
     <section className="panel p-4">
       <div className="flex items-center justify-between">
         <h2 className="eyebrow">hand history</h2>
-        <span className="eyebrow">{finished.length} played</span>
+        <span className="eyebrow">{finished.length} played · click to replay</span>
       </div>
 
       {finished.length === 0 ? (
@@ -78,7 +102,7 @@ export function HandHistory({ hands }: { hands: HandView[] }) {
       ) : (
         <div className="mt-3 space-y-1.5">
           {finished.map((h) => (
-            <HistoryRow key={h.id} hand={h} />
+            <HistoryRow key={h.id} hand={h} onSelect={onSelect} selected={selectedId === h.id} />
           ))}
         </div>
       )}

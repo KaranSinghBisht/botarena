@@ -17,4 +17,6 @@ export const publicClient = createPublicClient({
 });
 
 /** Max block span per getLogs request; keeps public RPCs happy. */
-export const LOG_CHUNK = 2000n;
+// rpc.bohr.life served a 15k-block getLogs range in one call during probing;
+// 10k keeps initial sync to 1-2 requests while staying under any range cap.
+export const LOG_CHUNK = 10_000n;
