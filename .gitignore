@@ -1,0 +1,9 @@
+.secrets/
+.env
+*.env.local
+node_modules/
+out/
+cache/
+broadcast/
+.next/
+.DS_Store

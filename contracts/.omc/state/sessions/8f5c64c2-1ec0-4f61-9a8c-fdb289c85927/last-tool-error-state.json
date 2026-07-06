@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"cd engine && npm run typecheck 2>&1 | tail -5 && echo TYPECHECK_OK\",\"description\":\"Typecheck engine after mock mode addition\"}",
+  "error": "Exit code 1\n(eval):cd:1: no such file or directory: engine",
+  "timestamp": "2026-07-06T04:29:02.306Z",
+  "retry_count": 1
+}

@@ -1,0 +1,45 @@
+{
+  "updatedAt": "2026-07-06T04:32:33.213Z",
+  "missions": [
+    {
+      "id": "session:8f5c64c2-1ec0-4f61-9a8c-fdb289c85927:none",
+      "source": "session",
+      "name": "none",
+      "objective": "Session mission",
+      "createdAt": "2026-07-06T04:32:33.213Z",
+      "updatedAt": "2026-07-06T04:32:33.213Z",
+      "status": "running",
+      "workerCount": 1,
+      "taskCounts": {
+        "total": 1,
+        "pending": 0,
+        "blocked": 0,
+        "inProgress": 1,
+        "completed": 0,
+        "failed": 0
+      },
+      "agents": [
+        {
+          "name": "webui:awebui-",
+          "role": "webui",
+          "ownership": "awebui-00fb84c43d2ce3cf",
+          "status": "running",
+          "currentStep": null,
+          "latestUpdate": null,
+          "completedSummary": null,
+          "updatedAt": "2026-07-06T04:32:33.213Z"
+        }
+      ],
+      "timeline": [
+        {
+          "id": "session-start:awebui-00fb84c43d2ce3cf:2026-07-06T04:32:33.213Z",
+          "at": "2026-07-06T04:32:33.213Z",
+          "kind": "update",
+          "agent": "webui:awebui-",
+          "detail": "started webui:awebui-",
+          "sourceKey": "session-start:awebui-00fb84c43d2ce3cf"
+        }
+      ]
+    }
+  ]
+}

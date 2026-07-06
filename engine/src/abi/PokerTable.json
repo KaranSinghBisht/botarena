@@ -1,0 +1,846 @@
+[
+ {
+  "type": "constructor",
+  "inputs": [
+   {
+    "name": "dealer_",
+    "type": "address",
+    "internalType": "address"
+   },
+   {
+    "name": "smallBlind_",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "bigBlind_",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "minBuyIn_",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "ACTION_TIMEOUT",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "DEALER_TIMEOUT",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "act",
+  "inputs": [
+   {
+    "name": "action",
+    "type": "uint8",
+    "internalType": "enum PokerTable.Action"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "quip",
+    "type": "string",
+    "internalType": "string"
+   },
+   {
+    "name": "reasoning",
+    "type": "string",
+    "internalType": "string"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "auditReveal",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "deck",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "bigBlind",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "dealer",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "deckCommits",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "enforceTimeout",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "getHand",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "h",
+    "type": "tuple",
+    "internalType": "struct PokerTable.Hand",
+    "components": [
+     {
+      "name": "id",
+      "type": "uint64",
+      "internalType": "uint64"
+     },
+     {
+      "name": "button",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "street",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "toAct",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "communityCount",
+      "type": "uint8",
+      "internalType": "uint8"
+     },
+     {
+      "name": "phase",
+      "type": "uint8",
+      "internalType": "enum PokerTable.Phase"
+     },
+     {
+      "name": "deckCommit",
+      "type": "bytes32",
+      "internalType": "bytes32"
+     },
+     {
+      "name": "community",
+      "type": "uint8[5]",
+      "internalType": "uint8[5]"
+     },
+     {
+      "name": "pot",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "streetBet",
+      "type": "uint256[2]",
+      "internalType": "uint256[2]"
+     },
+     {
+      "name": "handTotal",
+      "type": "uint256[2]",
+      "internalType": "uint256[2]"
+     },
+     {
+      "name": "betToMatch",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "lastRaise",
+      "type": "uint256",
+      "internalType": "uint256"
+     },
+     {
+      "name": "acted",
+      "type": "bool[2]",
+      "internalType": "bool[2]"
+     },
+     {
+      "name": "deadline",
+      "type": "uint64",
+      "internalType": "uint64"
+     }
+    ]
+   },
+   {
+    "name": "seatedPlayers",
+    "type": "address[2]",
+    "internalType": "address[2]"
+   },
+   {
+    "name": "seatStacks",
+    "type": "uint256[2]",
+    "internalType": "uint256[2]"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "hand",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "id",
+    "type": "uint64",
+    "internalType": "uint64"
+   },
+   {
+    "name": "button",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "street",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "toAct",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "communityCount",
+    "type": "uint8",
+    "internalType": "uint8"
+   },
+   {
+    "name": "phase",
+    "type": "uint8",
+    "internalType": "enum PokerTable.Phase"
+   },
+   {
+    "name": "deckCommit",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   },
+   {
+    "name": "pot",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "betToMatch",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "lastRaise",
+    "type": "uint256",
+    "internalType": "uint256"
+   },
+   {
+    "name": "deadline",
+    "type": "uint64",
+    "internalType": "uint64"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "join",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "type": "function",
+  "name": "leave",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "minBuyIn",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "owed",
+  "inputs": [
+   {
+    "name": "seat",
+    "type": "uint8",
+    "internalType": "uint8"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "players",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "revealStreet",
+  "inputs": [
+   {
+    "name": "cards",
+    "type": "uint8[]",
+    "internalType": "uint8[]"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "showdown",
+  "inputs": [
+   {
+    "name": "deck",
+    "type": "bytes",
+    "internalType": "bytes"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "smallBlind",
+  "inputs": [],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "stacks",
+  "inputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "startHand",
+  "inputs": [
+   {
+    "name": "deckCommit",
+    "type": "bytes32",
+    "internalType": "bytes32"
+   }
+  ],
+  "outputs": [],
+  "stateMutability": "nonpayable"
+ },
+ {
+  "type": "function",
+  "name": "stats",
+  "inputs": [
+   {
+    "name": "",
+    "type": "address",
+    "internalType": "address"
+   }
+  ],
+  "outputs": [
+   {
+    "name": "handsPlayed",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "handsWon",
+    "type": "uint32",
+    "internalType": "uint32"
+   },
+   {
+    "name": "chipsWon",
+    "type": "uint256",
+    "internalType": "uint256"
+   }
+  ],
+  "stateMutability": "view"
+ },
+ {
+  "type": "function",
+  "name": "topUp",
+  "inputs": [],
+  "outputs": [],
+  "stateMutability": "payable"
+ },
+ {
+  "type": "event",
+  "name": "ActionTaken",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "street",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "seat",
+    "type": "uint8",
+    "indexed": true,
+    "internalType": "uint8"
+   },
+   {
+    "name": "action",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum PokerTable.Action"
+   },
+   {
+    "name": "amount",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "pot",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "quip",
+    "type": "string",
+    "indexed": false,
+    "internalType": "string"
+   },
+   {
+    "name": "reasoning",
+    "type": "string",
+    "indexed": false,
+    "internalType": "string"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "DeckAudited",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "salt",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "HandCanceled",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "refund0",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "refund1",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "HandSettled",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "winnerSeat",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "amountWon",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "reason",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "enum PokerTable.SettleReason"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "HandStarted",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "button",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "deckCommit",
+    "type": "bytes32",
+    "indexed": false,
+    "internalType": "bytes32"
+   },
+   {
+    "name": "smallBlind",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "bigBlind",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "PlayerJoined",
+  "inputs": [
+   {
+    "name": "seat",
+    "type": "uint8",
+    "indexed": true,
+    "internalType": "uint8"
+   },
+   {
+    "name": "player",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "buyIn",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "PlayerLeft",
+  "inputs": [
+   {
+    "name": "seat",
+    "type": "uint8",
+    "indexed": true,
+    "internalType": "uint8"
+   },
+   {
+    "name": "player",
+    "type": "address",
+    "indexed": true,
+    "internalType": "address"
+   },
+   {
+    "name": "cashOut",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "ShowdownResult",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "holes0",
+    "type": "uint8[2]",
+    "indexed": false,
+    "internalType": "uint8[2]"
+   },
+   {
+    "name": "holes1",
+    "type": "uint8[2]",
+    "indexed": false,
+    "internalType": "uint8[2]"
+   },
+   {
+    "name": "score0",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   },
+   {
+    "name": "score1",
+    "type": "uint256",
+    "indexed": false,
+    "internalType": "uint256"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "event",
+  "name": "StreetRevealed",
+  "inputs": [
+   {
+    "name": "handId",
+    "type": "uint64",
+    "indexed": true,
+    "internalType": "uint64"
+   },
+   {
+    "name": "street",
+    "type": "uint8",
+    "indexed": false,
+    "internalType": "uint8"
+   },
+   {
+    "name": "cards",
+    "type": "uint8[]",
+    "indexed": false,
+    "internalType": "uint8[]"
+   }
+  ],
+  "anonymous": false
+ },
+ {
+  "type": "error",
+  "name": "AlreadySeated",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "BadAmount",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "BadDeck",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "BadReveal",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "BuyInTooSmall",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "HandInProgress",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "IllegalAction",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotDealer",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotSeated",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NotYourTurn",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "NothingToTimeout",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "SeatsFull",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "StacksTooSmall",
+  "inputs": []
+ },
+ {
+  "type": "error",
+  "name": "WrongPhase",
+  "inputs": []
+ }
+]
