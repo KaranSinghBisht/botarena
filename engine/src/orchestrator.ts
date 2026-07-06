@@ -4,7 +4,16 @@ import { fmtCards } from "./cards.js";
 import { config } from "./config.js";
 import { Dealer } from "./dealer.js";
 import { PERSONAS } from "./personas.js";
-import { Phase, publicClient, readHand, sendTable, walletFor, type HandState } from "./table.js";
+import {
+  Phase,
+  publicClient,
+  readBlinds,
+  readHand,
+  sendTable,
+  walletFor,
+  type Blinds,
+  type HandState,
+} from "./table.js";
 
 const BUY_IN = parseEther(process.env.BUY_IN ?? "0.1");
 const ACTION_NAMES = ["fold", "check", "call", "bet", "raise"];
@@ -19,6 +28,7 @@ let handLog: HandLogEntry[] = [];
 let trackedHandId = 0n;
 let showdownSent = false;
 let handsFinished = 0;
+let blinds: Blinds = { sb: 0n, bb: 0n };
 
 function explorer(tx: string): string {
   return `${config.explorerUrl}/tx/${tx}`;
@@ -51,8 +61,7 @@ async function onIdle(h: HandState): Promise<void> {
   if (await ensureSeated(h)) return; // re-read state next tick
 
   const fresh = await readHand();
-  const bigBlind = parseEther("0.002");
-  if (fresh.stacks[0] < bigBlind || fresh.stacks[1] < bigBlind) {
+  if (fresh.stacks[0] < blinds.bb || fresh.stacks[1] < blinds.bb) {
     console.log("\nA player is bust — session over.");
     printStacks(fresh);
     process.exit(0);
@@ -66,7 +75,7 @@ async function onIdle(h: HandState): Promise<void> {
 async function onBetting(h: HandState): Promise<void> {
   const { wallet, persona } = agents[h.toAct];
   const holes = dealer.holeCards(h.id, h.toAct);
-  const decision = await decide(persona, h, holes, handLog);
+  const decision = await decide(persona, h, holes, handLog, blinds);
   const name = ACTION_NAMES[decision.action];
   const args = [decision.action, decision.amount, decision.quip, decision.reasoning];
   const tx = await sendTable(wallet, "act", args);
@@ -108,8 +117,9 @@ async function main(): Promise<void> {
   console.log(`BotArena session (chain ${publicClient.chain?.id})`);
   console.log(`table: ${config.tableAddress}`);
   console.log(`dealer: ${dealer.address}`);
+  blinds = await readBlinds();
   const block = await publicClient.getBlockNumber();
-  console.log(`chain head: ${block}\n`);
+  console.log(`blinds: ${formatEther(blinds.sb)}/${formatEther(blinds.bb)} tBOT, chain head: ${block}\n`);
 
   // eslint-disable-next-line no-constant-condition
   while (true) {

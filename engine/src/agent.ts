@@ -2,7 +2,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { formatEther, parseEther } from "viem";
 import { fmtCards } from "./cards.js";
 import { config } from "./config.js";
-import { Action, type HandState } from "./table.js";
+import { Action, type Blinds, type HandState } from "./table.js";
 import type { Persona } from "./personas.js";
 
 export interface Decision {
@@ -58,12 +58,18 @@ function legalActions(h: HandState, seat: number): string[] {
   return acts;
 }
 
-function describeState(h: HandState, seat: number, holes: number[], log: HandLogEntry[]): string {
+function describeState(
+  h: HandState,
+  seat: number,
+  holes: number[],
+  log: HandLogEntry[],
+  blinds: Blinds,
+): string {
   const opp = 1 - seat;
   const owe = h.betToMatch - h.streetBet[seat];
   const board = h.communityCount > 0 ? fmtCards(h.community.slice(0, h.communityCount)) : "(none yet)";
   const pot = h.pot + h.streetBet[0] + h.streetBet[1];
-  const minRaiseTo = h.betToMatch + (h.lastRaise > 0n ? h.lastRaise : parseEther("0.002"));
+  const minRaiseTo = h.betToMatch + (h.lastRaise > 0n ? h.lastRaise : blinds.bb);
   const history = log
     .map((e) => `${STREETS[e.street]}: seat${e.seat} ${e.action}${e.amount > 0n ? ` ${formatEther(e.amount)}` : ""}${e.quip ? ` — "${e.quip}"` : ""}`)
     .join("\n");
@@ -81,7 +87,7 @@ function describeState(h: HandState, seat: number, holes: number[], log: HandLog
 }
 
 /** Clamp/repair a model decision into something the contract will accept. */
-function sanitize(h: HandState, seat: number, raw: Record<string, unknown>): Decision {
+function sanitize(h: HandState, seat: number, raw: Record<string, unknown>, blinds: Blinds): Decision {
   const owe = h.betToMatch - h.streetBet[seat];
   const stack = h.stacks[seat];
   const allInTo = h.streetBet[seat] + stack;
@@ -96,7 +102,7 @@ function sanitize(h: HandState, seat: number, raw: Record<string, unknown>): Dec
 
   if (name === "bet" || name === "raise") {
     let to = parseSafeEther(raw.raise_to);
-    const minTo = name === "bet" ? parseEther("0.002") : h.betToMatch + h.lastRaise;
+    const minTo = name === "bet" ? blinds.bb : h.betToMatch + h.lastRaise;
     if (to < minTo) to = minTo;
     if (to > allInTo) to = allInTo;
     if (name === "raise" && stack <= owe) {
@@ -117,7 +123,7 @@ function parseSafeEther(value: unknown): bigint {
 
 /** Scripted policy for local dry-runs (AGENT_MODEL=mock): exercises every code
  *  path — checks, calls, raises, folds and the occasional shove — with no API. */
-function mockDecision(h: HandState, seat: number): Decision {
+function mockDecision(h: HandState, seat: number, blinds: Blinds): Decision {
   const owe = h.betToMatch - h.streetBet[seat];
   const stack = h.stacks[seat];
   const allInTo = h.streetBet[seat] + stack;
@@ -126,7 +132,7 @@ function mockDecision(h: HandState, seat: number): Decision {
 
   if (owe === 0n) {
     if (roll < 0.6 || h.betToMatch > 0n) return { action: Action.Check, amount: 0n, ...tag };
-    const to = h.pot / 2n > parseEther("0.002") ? h.pot / 2n : parseEther("0.002");
+    const to = h.pot / 2n > blinds.bb ? h.pot / 2n : blinds.bb;
     return { action: Action.Bet, amount: to > allInTo ? allInTo : to, ...tag };
   }
   if (roll < 0.15) return { action: Action.Fold, amount: 0n, ...tag };
@@ -143,11 +149,15 @@ export async function decide(
   h: HandState,
   holes: number[],
   log: HandLogEntry[],
+  blinds: Blinds,
 ): Promise<Decision> {
-  if (config.model === "mock") return mockDecision(h, persona.seat);
+  if (config.model === "mock") return mockDecision(h, persona.seat, blinds);
   const system = [
     persona.style,
-    "You play for real on-chain stakes. Blinds are 0.001/0.002 tBOT.",
+    "Heads-up ranges are WIDE: preflop folds should be rare (worst ~25% of hands",
+    "on the button, worst ~15% in the big blind vs a min-raise). Reaching",
+    "showdown with a read is worth more than surrendering blinds.",
+    `You play for real on-chain stakes. Blinds are ${formatEther(blinds.sb)}/${formatEther(blinds.bb)} tBOT.`,
     "Think about pot odds, ranges, position and the opponent's line, then commit",
     "exactly one action via the decide_action tool. Your `reasoning` is shown to",
     "spectators (they see your logic, opponent does not) — make it sharp and honest.",
@@ -159,14 +169,14 @@ export async function decide(
       model: config.model,
       max_tokens: 500,
       system,
-      messages: [{ role: "user", content: describeState(h, seat(persona), holes, log) }],
+      messages: [{ role: "user", content: describeState(h, seat(persona), holes, log, blinds) }],
       tools: [decideTool],
       tool_choice: { type: "tool", name: "decide_action" },
       temperature: 1,
     });
     const toolUse = res.content.find((b) => b.type === "tool_use");
     if (!toolUse || toolUse.type !== "tool_use") throw new Error("no tool_use block");
-    return sanitize(h, persona.seat, toolUse.input as Record<string, unknown>);
+    return sanitize(h, persona.seat, toolUse.input as Record<string, unknown>, blinds);
   } catch (err) {
     // Never stall the table on an API hiccup: take the free/cheap way out.
     console.error(`[${persona.name}] decision error, playing safe:`, err);

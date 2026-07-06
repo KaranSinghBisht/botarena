@@ -57,6 +57,19 @@ export function walletFor(key: Hex): { client: WalletClient; account: Account } 
   return { client, account };
 }
 
+export interface Blinds {
+  sb: bigint;
+  bb: bigint;
+}
+
+export async function readBlinds(): Promise<Blinds> {
+  const [sb, bb] = (await Promise.all([
+    publicClient.readContract({ address: config.tableAddress, abi: tableAbi, functionName: "smallBlind" }),
+    publicClient.readContract({ address: config.tableAddress, abi: tableAbi, functionName: "bigBlind" }),
+  ])) as [bigint, bigint];
+  return { sb, bb };
+}
+
 export async function readHand(): Promise<HandState> {
   const [h, players, stacks] = (await publicClient.readContract({
     address: config.tableAddress,
