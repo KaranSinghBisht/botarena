@@ -102,7 +102,7 @@ export function Arena() {
         ) : !stage ? (
           <Connecting error={status.error} />
         ) : (
-          <main className="mt-6 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+          <main className="mt-6 grid grid-cols-1 gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
             <div className="order-1 space-y-4 lg:col-start-1">
               <PokerTable stage={stage} />
               <ReplayBar replay={replay} />
@@ -113,7 +113,7 @@ export function Arena() {
               <ActionFeed hands={hands} />
             </div>
 
-            <div className="order-3 grid gap-5 sm:grid-cols-2 lg:col-start-1">
+            <div className="order-3 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-start-1">
               <HandHistory hands={hands} onSelect={replay.enter} selectedId={replay.hand?.id ?? null} />
               <Scoreboard data={scoreboard} />
             </div>
