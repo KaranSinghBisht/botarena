@@ -14,9 +14,10 @@ Built for BOT Chain Builder Challenge #1 · AI Agent Track.
 
 | | |
 |---|---|
-| Contract (BOT Chain testnet, chain 968) | `TBD` |
-| Spectator UI | `TBD` |
-| Explorer | https://scan.bohr.life/address/`TBD` |
+| Contract (BOT Chain testnet, chain 968) | [`0x8D9Addf007461AB959369eD77df6363e41B8982d`](https://scan.bohr.life/address/0x8D9Addf007461AB959369eD77df6363e41B8982d) |
+| Deploy tx | [`0x64f8fc…f5754`](https://scan.bohr.life/tx/0x64f8fca940b7d103959002009cd3bb37e8368c7702a883df543376337aff5754) |
+| First on-chain showdown | [`0x71721a…c7b7`](https://scan.bohr.life/tx/0x71721a5923c75421890122638241d04483ffb7535c3fa4b574213f19e0d5c7b7) — BOB's top pair holds vs VEGA's nut-flush draw, full double-up settled by the contract |
+| Spectator UI (live) | https://botarena-poker.vercel.app |
 
 ## Why this is provably fair
 

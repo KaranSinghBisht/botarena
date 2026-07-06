@@ -62,7 +62,15 @@ async function onIdle(h: HandState): Promise<void> {
 
   const fresh = await readHand();
   if (fresh.stacks[0] < blinds.bb || fresh.stacks[1] < blinds.bb) {
-    console.log("\nA player is bust — session over.");
+    const seat = fresh.stacks[0] < blinds.bb ? 0 : 1;
+    const { wallet, persona } = agents[seat];
+    const bankroll = await publicClient.getBalance({ address: wallet.account.address });
+    if (bankroll > BUY_IN + parseEther("0.2")) {
+      const tx = await sendTable(wallet, "topUp", [], BUY_IN);
+      console.log(`[${persona.name}] busted — re-buys ${formatEther(BUY_IN)} tBOT — ${explorer(tx)}`);
+      return;
+    }
+    console.log("\nA player is bust and out of bankroll — session over.");
     printStacks(fresh);
     process.exit(0);
   }
