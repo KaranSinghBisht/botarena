@@ -121,7 +121,13 @@ export function Arena() {
             <div className="order-2 h-[72vh] min-w-0 lg:col-start-2 lg:row-span-2 lg:h-[calc(100vh-3rem)] lg:sticky lg:top-4">
               <ActionFeed
                 hands={hands}
-                focusHandId={replay.hand === null && table?.live ? table.handId : null}
+                focus={
+                  replay.hand !== null
+                    ? { handId: replay.hand.id, mode: "replay", uptoStep: replay.index }
+                    : table?.live
+                      ? { handId: table.handId, mode: "live" }
+                      : null
+                }
               />
             </div>
 

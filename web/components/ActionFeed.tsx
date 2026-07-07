@@ -1,8 +1,25 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import type { HandView } from "@/lib/types";
+import { useEffect, useMemo, useRef } from "react";
+import type { ArenaEvent, HandView } from "@/lib/types";
 import { HandBlock } from "./feed/HandBlock";
+
+/** Event kinds that correspond 1:1 with replay steps (step 0 = blinds). */
+const STEP_KINDS = new Set(["ActionTaken", "StreetRevealed", "ShowdownResult", "HandSettled"]);
+
+/** Trim a hand's events to what the replay has revealed so far. */
+function sliceToStep(events: ArenaEvent[], uptoStep: number): ArenaEvent[] {
+  const out: ArenaEvent[] = [];
+  let n = 0;
+  for (const ev of events) {
+    if (STEP_KINDS.has(ev.kind)) {
+      n++;
+      if (n > uptoStep) break;
+    }
+    out.push(ev);
+  }
+  return out;
+}
 
 function FeedEmpty() {
   return (
@@ -18,19 +35,37 @@ function FeedEmpty() {
   );
 }
 
+export interface FeedFocus {
+  handId: number;
+  mode: "live" | "replay";
+  /** replay only: reveal events up to this step so the chat streams in sync */
+  uptoStep?: number;
+}
+
 /** The live play-by-play — quips, reasoning, reveals and settlements per hand. */
 export function ActionFeed({
   hands,
-  focusHandId = null,
+  focus = null,
 }: {
   hands: HandView[];
-  /** while a hand is live, show only its chat so the stream reads clean */
-  focusHandId?: number | null;
+  /** while a hand is live or replaying, show only its chat so the stream reads clean */
+  focus?: FeedFocus | null;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const seenRef = useRef(0);
-  const focused = focusHandId !== null ? hands.filter((h) => h.id === focusHandId) : hands;
-  const visible = focused.length > 0 ? focused : hands;
+
+  const focused = useMemo(() => {
+    if (focus === null) return null;
+    const h = hands.find((x) => x.id === focus.handId);
+    if (!h) return null;
+    const events =
+      focus.mode === "replay" && focus.uptoStep !== undefined
+        ? sliceToStep(h.events, focus.uptoStep)
+        : h.events;
+    return [{ ...h, events }];
+  }, [hands, focus]);
+
+  const visible = focused ?? hands;
   const total = visible.reduce((n, h) => n + h.events.length, 0);
 
   useEffect(() => {
@@ -51,11 +86,15 @@ export function ActionFeed({
           <span className="text-log">▹</span>
           <h2 className="text-sm font-bold tracking-[0.12em]">LIVE ACTION FEED</h2>
         </div>
-        {focusHandId !== null && focused.length > 0 ? (
-          <span className="eyebrow flex items-center gap-1.5 !text-log">
-            <span className="h-1.5 w-1.5 rounded-full bg-log animate-pulse-dot" />
-            live · hand #{focusHandId}
-          </span>
+        {focus !== null && focused ? (
+          focus.mode === "live" ? (
+            <span className="eyebrow flex items-center gap-1.5 !text-log">
+              <span className="h-1.5 w-1.5 rounded-full bg-log animate-pulse-dot" />
+              live · hand #{focus.handId}
+            </span>
+          ) : (
+            <span className="eyebrow !text-gold">⟲ replay · hand #{focus.handId}</span>
+          )
         ) : (
           <span className="eyebrow">
             {hands.length} hand{hands.length === 1 ? "" : "s"}
