@@ -18,6 +18,8 @@ import {
 const BUY_IN = parseEther(process.env.BUY_IN ?? "0.1");
 const ACTION_NAMES = ["fold", "check", "call", "bet", "raise"];
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 const dealer = new Dealer();
 const agents = config.agentKeys.map((key, seat) => ({
   wallet: walletFor(key),
@@ -98,6 +100,7 @@ async function onBetting(h: HandState): Promise<void> {
     `[${persona.name}] ${fmtCards(holes)} -> ${name}${decision.amount > 0n ? ` to ${formatEther(decision.amount)}` : ""}` +
       `${decision.quip ? ` | "${decision.quip}"` : ""}\n    ${explorer(tx)}`,
   );
+  if (config.paceMs > 0) await sleep(config.paceMs); // let spectators read the quip
 }
 
 function printStacks(h: HandState): void {
@@ -113,6 +116,7 @@ async function tick(): Promise<void> {
   if (h.phase === Phase.AwaitReveal) {
     const tx = await dealer.revealNext(h);
     void tx;
+    if (config.paceMs > 0) await sleep(config.paceMs); // pause on each new street
     return;
   }
   if (h.phase === Phase.AwaitShowdown) {

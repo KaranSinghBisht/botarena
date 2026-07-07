@@ -28,5 +28,7 @@ export const config = {
   model: process.env.AGENT_MODEL ?? "claude-sonnet-5",
   handsPerSession: Number(process.env.HANDS ?? 5),
   pollMs: Number(process.env.POLL_MS ?? 900),
+  /** extra pause after each action / street reveal — set ~5000 for narrated demos */
+  paceMs: Number(process.env.PACE_MS ?? 0),
   explorerUrl: "https://scan.bohr.life",
 } as const;

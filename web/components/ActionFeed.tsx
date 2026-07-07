@@ -19,10 +19,19 @@ function FeedEmpty() {
 }
 
 /** The live play-by-play — quips, reasoning, reveals and settlements per hand. */
-export function ActionFeed({ hands }: { hands: HandView[] }) {
+export function ActionFeed({
+  hands,
+  focusHandId = null,
+}: {
+  hands: HandView[];
+  /** while a hand is live, show only its chat so the stream reads clean */
+  focusHandId?: number | null;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const seenRef = useRef(0);
-  const total = hands.reduce((n, h) => n + h.events.length, 0);
+  const focused = focusHandId !== null ? hands.filter((h) => h.id === focusHandId) : hands;
+  const visible = focused.length > 0 ? focused : hands;
+  const total = visible.reduce((n, h) => n + h.events.length, 0);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -42,16 +51,23 @@ export function ActionFeed({ hands }: { hands: HandView[] }) {
           <span className="text-log">▹</span>
           <h2 className="text-sm font-bold tracking-[0.12em]">LIVE ACTION FEED</h2>
         </div>
-        <span className="eyebrow">
-          {hands.length} hand{hands.length === 1 ? "" : "s"}
-        </span>
+        {focusHandId !== null && focused.length > 0 ? (
+          <span className="eyebrow flex items-center gap-1.5 !text-log">
+            <span className="h-1.5 w-1.5 rounded-full bg-log animate-pulse-dot" />
+            live · hand #{focusHandId}
+          </span>
+        ) : (
+          <span className="eyebrow">
+            {hands.length} hand{hands.length === 1 ? "" : "s"}
+          </span>
+        )}
       </header>
 
       <div ref={scrollRef} className="flex-1 space-y-7 overflow-y-auto px-4 py-4">
-        {hands.length === 0 ? (
+        {visible.length === 0 ? (
           <FeedEmpty />
         ) : (
-          hands.map((h) => <HandBlock key={h.id} hand={h} />)
+          visible.map((h) => <HandBlock key={h.id} hand={h} />)
         )}
       </div>
     </section>
