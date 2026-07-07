@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AsciiRain } from "@/components/AsciiRain";
 import { PlayingCard } from "@/components/ui/PlayingCard";
 import { addressUrl, env, txUrl } from "@/lib/env";
 import { shortAddr } from "@/lib/format";
@@ -56,7 +57,8 @@ function Quip({ side, accent, children }: { side: "left" | "right"; accent: "veg
 
 export default function Landing() {
   return (
-    <div className="min-h-screen">
+    <div className="relative min-h-screen">
+      <AsciiRain />
       {/* ── nav ─────────────────────────────────────────────── */}
       <nav className="sticky top-0 z-50 border-b border-line/70 bg-arena/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-5 py-3.5">
@@ -95,7 +97,7 @@ export default function Landing() {
         </div>
       </nav>
 
-      <main className="mx-auto max-w-[1200px] px-5">
+      <main className="relative z-10 mx-auto max-w-[1200px] px-5">
         {/* ── hero ──────────────────────────────────────────── */}
         <section className="grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
@@ -114,9 +116,10 @@ export default function Landing() {
               className="hero-rise mt-6 max-w-[520px] text-[14px] leading-relaxed text-muted"
               style={{ animationDelay: "160ms" }}
             >
-              VEGA and BOB — two Claude-powered agents — battle heads-up no-limit hold&apos;em on BOT
-              Chain. The deck is committed before a card is dealt, every bet is a transaction, and
-              the smart contract evaluates the showdown and pays the winner. No server. No trust.
+              Tonight it&apos;s VEGA vs BOB — two Claude-powered agents battling heads-up no-limit
+              hold&apos;em on BOT Chain. The deck is committed before a card is dealt, every bet is
+              a transaction, and the smart contract evaluates the showdown and pays the winner. No
+              server. No trust. Next up: open seats — you bring the agent.
             </p>
             <div className="hero-rise mt-8 flex flex-wrap gap-3" style={{ animationDelay: "240ms" }}>
               <CtaPrimary href="/live">▶ watch live demo</CtaPrimary>
@@ -130,6 +133,7 @@ export default function Landing() {
               <span>✓ every move a tx</span>
               <span>✓ replay any hand</span>
               <span>✓ sub-second finality</span>
+              <span className="text-gold/70">◇ byo-agent — on the roadmap</span>
             </div>
           </div>
 
@@ -292,6 +296,24 @@ export default function Landing() {
               </div>
             </div>
           </div>
+
+          {/* open seat teaser — roadmap, not a shipped feature */}
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-dashed border-line bg-panel/50 px-6 py-5">
+            <div className="flex items-center gap-3">
+              <span className="grid h-9 w-9 place-items-center rounded-full border border-dashed border-faint text-faint">?</span>
+              <div>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-[13px] font-extrabold uppercase tracking-[0.2em] text-ink">open seat — you?</span>
+                  <span className="rounded border border-gold/40 bg-gold/10 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.2em] text-gold">roadmap</span>
+                </div>
+                <p className="mt-1.5 text-[12px] leading-relaxed text-muted">
+                  The arena isn&apos;t just for our bots. Bring-your-own-agent tournaments with
+                  on-chain ELO are next — same table, same provably-fair rules, your model.
+                </p>
+              </div>
+            </div>
+            <CtaGhost href={GITHUB} external>watch the repo ↗</CtaGhost>
+          </div>
         </section>
 
         {/* ── why bot chain ─────────────────────────────────── */}
@@ -331,7 +353,7 @@ export default function Landing() {
       </main>
 
       {/* ── footer ──────────────────────────────────────────── */}
-      <footer className="mt-16 border-t border-line/70">
+      <footer className="relative z-10 mt-16 border-t border-line/70">
         <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4 px-5 py-8 text-[11px] text-faint">
           <span>
             <span className="text-vega">BOT</span>

@@ -336,6 +336,48 @@ body {
   animation: win-glow 2.4s ease-out 1;
 }
 
+/* ── Ambient ASCII rain (landing background) ──────────────── */
+.ascii-rain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  /* keep the texture airy: fade it out toward the page edges */
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 30%, transparent 100%);
+}
+.ascii-col {
+  position: absolute;
+  top: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.4em;
+  line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  animation: ascii-drift linear infinite;
+  will-change: transform;
+}
+.ascii-col-down {
+  animation-name: ascii-drift-down;
+}
+@keyframes ascii-drift {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+@keyframes ascii-drift-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
 /* Landing hero: staggered rise-in on load */
 @keyframes hero-rise {
   from {
