@@ -68,16 +68,28 @@ export function ActionFeed({
   const visible = focused ?? hands;
   const total = visible.reduce((n, h) => n + h.events.length, 0);
 
+  const pinned = focus !== null;
   useEffect(() => {
     const el = scrollRef.current;
-    if (!el || total <= seenRef.current) {
+    if (!el) {
       seenRef.current = total;
       return;
     }
-    const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 180;
-    if (nearBottom || seenRef.current === 0) el.scrollTop = el.scrollHeight;
+    if (pinned) {
+      // live / replay: always follow the newest message.
+      // NOTE: smooth scrollTo silently no-ops under reduced-motion — assign directly.
+      if (total !== seenRef.current) {
+        requestAnimationFrame(() => {
+          el.scrollTop = el.scrollHeight;
+        });
+      }
+    } else if (total > seenRef.current) {
+      // archive mode: only follow if the reader is already near the bottom
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 180;
+      if (nearBottom || seenRef.current === 0) el.scrollTop = el.scrollHeight;
+    }
     seenRef.current = total;
-  }, [total]);
+  }, [total, pinned]);
 
   return (
     <section className="panel flex h-full flex-col overflow-hidden">
