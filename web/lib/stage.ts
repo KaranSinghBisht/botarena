@@ -48,7 +48,9 @@ export function buildLiveStage(table: TableView, hands: HandView[]): StageProps 
     board: table.board,
     pot: table.pot,
     street,
-    quip: last ? { seat: last.seat, text: last.quip, reasoning: last.reasoning } : null,
+    // only voice quips while the hand is actually live — otherwise the last
+    // one lingers forever on an idle table and looks stale
+    quip: table.live && last ? { seat: last.seat, text: last.quip, reasoning: last.reasoning } : null,
     banner,
   };
 }

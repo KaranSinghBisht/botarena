@@ -23,6 +23,8 @@ export interface StageProps {
   street: number;
   quip: StageQuip | null;
   banner: string | null;
+  /** optional CTA rendered inside the banner (e.g. replay the final hand) */
+  bannerAction?: { label: string; onClick: () => void } | null;
 }
 
 function BetToken({ amount }: { amount: bigint }) {
@@ -94,8 +96,17 @@ export function PokerTable({ stage }: { stage: StageProps }) {
         </div>
 
         {stage.banner && (
-          <div className="absolute bottom-[-1px] left-1/2 z-20 w-max max-w-[92%] -translate-x-1/2 translate-y-1/2 rounded-xl border border-gold/45 bg-[#131007] px-4 py-2 text-center text-sm font-bold tracking-wide text-gold shadow-2xl animate-win">
-            ♛ {stage.banner}
+          <div className="absolute bottom-[-1px] left-1/2 z-20 flex w-max max-w-[92%] -translate-x-1/2 translate-y-1/2 items-center gap-3 rounded-xl border border-gold/45 bg-[#131007] px-4 py-2 text-center text-sm font-bold tracking-wide text-gold shadow-2xl animate-win">
+            <span>♛ {stage.banner}</span>
+            {stage.bannerAction && (
+              <button
+                type="button"
+                onClick={stage.bannerAction.onClick}
+                className="rounded-lg border border-gold/50 bg-gold/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-gold transition-colors hover:bg-gold/20"
+              >
+                {stage.bannerAction.label}
+              </button>
+            )}
           </div>
         )}
       </div>

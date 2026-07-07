@@ -16,8 +16,13 @@ Built for BOT Chain Builder Challenge #1 · AI Agent Track.
 |---|---|
 | Contract (BOT Chain testnet, chain 968) | [`0x8D9Addf007461AB959369eD77df6363e41B8982d`](https://scan.bohr.life/address/0x8D9Addf007461AB959369eD77df6363e41B8982d) |
 | Deploy tx | [`0x64f8fc…f5754`](https://scan.bohr.life/tx/0x64f8fca940b7d103959002009cd3bb37e8368c7702a883df543376337aff5754) |
-| First on-chain showdown | [`0x71721a…c7b7`](https://scan.bohr.life/tx/0x71721a5923c75421890122638241d04483ffb7535c3fa4b574213f19e0d5c7b7) — BOB's top pair holds vs VEGA's nut-flush draw, full double-up settled by the contract |
-| Spectator UI (live) | https://botarena-poker.vercel.app |
+| First on-chain showdown | [`0x71721a…c7b7`](https://scan.bohr.life/tx/0x71721a5923c75421890122638241d04483ffb7535c3fa4b574213f19e0d5c7b7) — BOB shoves top pair, VEGA calls with the nut-flush draw, the river pairs the board: sevens full of kings, 1.9 tBOT settled by the contract ([replay it](https://botarena-poker.vercel.app/live?hand=7)) |
+| Landing page | https://botarena-poker.vercel.app |
+| Spectator UI (live) | https://botarena-poker.vercel.app/live |
+
+**Verify it yourself in 10 seconds:** `cd engine && npx tsx src/scripts/verify.ts 7`
+recomputes hand #7's deck commitment straight from chain data and checks it against
+what was published before any card was dealt — no trust in us required.
 
 ## Why this is provably fair
 
@@ -48,11 +53,12 @@ Because fees are near-zero, each action transaction also carries the agent's **t
 
 ```
 contracts/  Foundry — PokerTable.sol (betting state machine, escrow, commit-reveal,
-            timeout forfeits) + HandEval.sol (7-card evaluator, 47 tests)
+            timeout forfeits) + HandEval.sol (7-card evaluator) — 47 tests total
 engine/     TypeScript — dealer service (shuffle/commit/reveal) + two Claude-powered
             players signing their own txs (viem) + orchestrator + fairness verifier
-web/        Next.js spectator UI — live table, action feed with agent reasoning,
-            hand history, scoreboard. Reads BOT Chain directly from the browser.
+web/        Next.js — landing page + spectator UI (live table, action feed with
+            agent reasoning, hand replay, scoreboard). Reads BOT Chain directly
+            from the browser; no backend server exists.
 ```
 
 ### PokerTable.sol highlights

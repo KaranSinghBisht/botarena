@@ -33,6 +33,8 @@ export function useReplay(): ReplayState {
   const steps = useMemo(() => (hand ? buildReplay(hand) : []), [hand]);
   const indexRef = useRef(index);
   indexRef.current = index;
+  const playingRef = useRef(playing);
+  playingRef.current = playing;
 
   const seek = useCallback(
     (i: number) => {
@@ -59,7 +61,13 @@ export function useReplay(): ReplayState {
     setIndex(0);
   }, []);
 
-  const togglePlay = useCallback(() => setPlaying((p) => !p), []);
+  const togglePlay = useCallback(() => {
+    // pressing play while parked on the final step restarts the hand
+    if (!playingRef.current && steps.length > 1 && indexRef.current >= steps.length - 1) {
+      setIndex(0);
+    }
+    setPlaying((p) => !p);
+  }, [steps]);
   const setSpeed = useCallback((x: number) => setSpeedState(x), []);
 
   useEffect(() => {

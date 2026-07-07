@@ -154,7 +154,8 @@ body {
 
 /* Speech bubble anchored to a pod on the felt */
 .table-quip {
-  max-width: min(360px, 72vw);
+  /* must never spill past the stage edge into the feed column */
+  max-width: min(270px, 24vw);
   border-radius: 12px;
   padding: 7px 11px;
   font-size: 12.5px;
@@ -333,6 +334,21 @@ body {
 }
 .animate-win {
   animation: win-glow 2.4s ease-out 1;
+}
+
+/* Landing hero: staggered rise-in on load */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-rise {
+  animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @keyframes pulse-dot {

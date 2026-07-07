@@ -90,6 +90,15 @@ export function Arena() {
       ? buildLiveStage(table, hands)
       : null;
 
+  // idle table (match over / between hands): offer a one-click replay of the
+  // last settled hand so the landing state is never a dead screen
+  if (stage && !replay.hand && table && !table.live && stage.banner) {
+    const lastSettled = [...hands].reverse().find((h) => h.settled);
+    if (lastSettled) {
+      stage.bannerAction = { label: "▶ replay", onClick: () => replay.enter(lastSettled) };
+    }
+  }
+
   return (
     <div className="min-h-screen">
       {status.configured && <Ticker state={state} latestBlock={status.latestBlock} />}

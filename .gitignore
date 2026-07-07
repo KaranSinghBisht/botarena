@@ -8,3 +8,5 @@ broadcast/
 .next/
 .DS_Store
 .omc/
+# internal submission strategy notes — not for the public repo
+SUBMISSION.md
